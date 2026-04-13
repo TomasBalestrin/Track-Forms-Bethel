@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { PixelsGrid } from "./pixels-grid";
+import { PixelsGrid, PixelsGridSkeleton } from "./pixels-grid";
 
 export default function PixelsPage() {
   return (
@@ -24,7 +25,9 @@ export default function PixelsPage() {
         </Button>
       </header>
 
-      <PixelsGrid />
+      <Suspense fallback={<PixelsGridSkeleton />}>
+        <PixelsGrid />
+      </Suspense>
     </div>
   );
 }

@@ -12,13 +12,7 @@ export function PixelsGrid() {
   const { data, isLoading, isError, error } = usePixels();
 
   if (isLoading) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-48 w-full" />
-        ))}
-      </div>
-    );
+    return <PixelsGridSkeleton />;
   }
 
   if (isError) {
@@ -53,6 +47,16 @@ export function PixelsGrid() {
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {data.map((pixel) => (
         <PixelCard key={pixel.id} pixel={pixel} />
+      ))}
+    </div>
+  );
+}
+
+export function PixelsGridSkeleton() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Skeleton key={i} className="h-48 w-full" />
       ))}
     </div>
   );
