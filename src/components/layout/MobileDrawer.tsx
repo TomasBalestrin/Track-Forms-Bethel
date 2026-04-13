@@ -28,7 +28,7 @@ export function MobileDrawer({ userEmail }: MobileDrawerProps) {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-40 lg:hidden",
+        "fixed inset-0 z-40 md:hidden",
         sidebarOpen ? "pointer-events-auto" : "pointer-events-none"
       )}
       aria-hidden={!sidebarOpen}

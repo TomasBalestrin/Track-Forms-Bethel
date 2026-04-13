@@ -77,7 +77,7 @@ export function LeadRow({ lead, hasRules }: LeadRowProps) {
         <TableCell>
           <StatusBadge lead={lead} hasRules={hasRules} />
         </TableCell>
-        <TableCell>
+        <TableCell className="hidden md:table-cell">
           {lead.fb_sent_at ? (
             <Badge className="bg-sky-600 text-white hover:bg-sky-600/90">
               Enviado
@@ -86,7 +86,7 @@ export function LeadRow({ lead, hasRules }: LeadRowProps) {
             <span className="text-xs text-muted-foreground">—</span>
           )}
         </TableCell>
-        <TableCell className="hidden max-w-[180px] truncate text-xs text-muted-foreground md:table-cell">
+        <TableCell className="hidden max-w-[180px] truncate text-xs text-muted-foreground lg:table-cell">
           {truncate(lead.utm_campaign)}
         </TableCell>
         <TableCell className="w-10 text-right">

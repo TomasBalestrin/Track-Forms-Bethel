@@ -71,8 +71,8 @@ export function LeadsTable({
               <TableHead className="w-[110px]">Data</TableHead>
               <TableHead>Email</TableHead>
               <TableHead className="w-[130px]">Status</TableHead>
-              <TableHead className="w-[110px]">FB</TableHead>
-              <TableHead className="hidden md:table-cell">Campanha</TableHead>
+              <TableHead className="hidden w-[110px] md:table-cell">FB</TableHead>
+              <TableHead className="hidden lg:table-cell">Campanha</TableHead>
               <TableHead className="w-10" aria-label="Expandir" />
             </TableRow>
           </TableHeader>

@@ -111,7 +111,7 @@ export default async function PixelDetailPage({ params }: PageProps) {
         </CardContent>
       </Card>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid grid-cols-2 gap-4 md:grid-cols-3">
         <StatCard label="Total de leads" value={total} />
         <StatCard label="Qualificados" value={qualified} />
         <StatCard label="Enviados ao FB" value={fbSent} />

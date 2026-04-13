@@ -9,7 +9,7 @@ export function Header() {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b bg-background px-4 lg:hidden">
+    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b bg-background px-4 md:hidden">
       <div className="flex items-center gap-2">
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"

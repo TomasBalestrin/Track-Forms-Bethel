@@ -25,7 +25,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-background">
       <Sidebar userEmail={userEmail} />
       <MobileDrawer userEmail={userEmail} />
-      <div className="flex min-h-screen flex-col lg:pl-60">
+      <div className="flex min-h-screen flex-col md:pl-60">
         <Header />
         <main className="flex-1">{children}</main>
       </div>
