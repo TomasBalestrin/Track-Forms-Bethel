@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Settings2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { LeadsTable } from "@/components/leads/LeadsTable";
 import { SnippetCopy } from "@/components/pixels/SnippetCopy";
 import { WebhookUrlCopy } from "@/components/pixels/WebhookUrlCopy";
+import { QualificationDrawer } from "@/components/qualification/QualificationDrawer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -93,12 +94,7 @@ export default async function PixelDetailPage({ params }: PageProps) {
             {pixel.pixel_id}
           </Badge>
         </div>
-        <Button asChild variant="outline">
-          <Link href={`/pixels/${pixel.id}/config`}>
-            <Settings2 className="h-4 w-4" aria-hidden="true" />
-            Configurar Qualificação
-          </Link>
-        </Button>
+        <QualificationDrawer pixelId={pixel.id} pixelName={pixel.name} />
       </header>
 
       <Card>
