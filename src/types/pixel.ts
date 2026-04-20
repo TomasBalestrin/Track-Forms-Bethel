@@ -5,6 +5,7 @@ export interface Pixel {
   pixel_id: string;
   capi_token: string;
   webhook_token: string;
+  qualified_webhook_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -18,4 +19,5 @@ export interface CreatePixelInput {
 export interface UpdatePixelInput {
   name?: string;
   capi_token?: string;
+  qualified_webhook_url?: string | null;
 }

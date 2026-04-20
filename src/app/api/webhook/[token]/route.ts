@@ -5,6 +5,7 @@ import { evaluateQualification } from "@/lib/qualification/engine";
 import { parseWebhookPayload } from "@/lib/webhook/parser";
 import { capiService } from "@/services/capiService";
 import { leadService } from "@/services/leadService";
+import { qualifiedWebhookService } from "@/services/qualifiedWebhookService";
 import { ruleService } from "@/services/ruleService";
 import type { Pixel } from "@/types/pixel";
 
@@ -83,20 +84,55 @@ export async function POST(request: Request, { params }: RouteContext) {
       );
     }
 
-    // 6) Envia CAPI se qualificado e ainda não enviado
-    if (isQualified && !lead.fb_sent_at) {
-      const capiResult = await capiService.sendLeadEvent({
-        pixel: typedPixel,
-        lead,
-      });
-      if (capiResult.success) {
-        await leadService
-          .updateFbSentAt(supabase, lead.id)
-          .catch((err) =>
-            console.error("[POST /api/webhook] fb_sent_at update", err)
-          );
-      } else {
-        console.error("[POST /api/webhook] CAPI failed", capiResult.error);
+    // 6) Dispatch paralelo: CAPI + webhook externo (se qualificado)
+    if (isQualified) {
+      const dispatches: Promise<unknown>[] = [];
+
+      if (!lead.fb_sent_at) {
+        dispatches.push(
+          capiService
+            .sendLeadEvent({ pixel: typedPixel, lead })
+            .then(async (result) => {
+              if (result.success) {
+                await leadService
+                  .updateFbSentAt(supabase, lead.id)
+                  .catch((err) =>
+                    console.error(
+                      "[POST /api/webhook] fb_sent_at update",
+                      err
+                    )
+                  );
+              } else {
+                console.error(
+                  "[POST /api/webhook] CAPI failed",
+                  result.error
+                );
+              }
+            })
+        );
+      }
+
+      if (typedPixel.qualified_webhook_url) {
+        dispatches.push(
+          qualifiedWebhookService
+            .sendLead({
+              url: typedPixel.qualified_webhook_url,
+              pixel: typedPixel,
+              lead,
+            })
+            .then((result) => {
+              if (!result.success) {
+                console.error(
+                  "[POST /api/webhook] qualified webhook failed",
+                  result.error
+                );
+              }
+            })
+        );
+      }
+
+      if (dispatches.length > 0) {
+        await Promise.allSettled(dispatches);
       }
     }
 
