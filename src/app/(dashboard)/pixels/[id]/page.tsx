@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
+import { ExportLeadsButton } from "@/components/leads/ExportLeadsButton";
 import { LeadsTable } from "@/components/leads/LeadsTable";
 import { SnippetCopy } from "@/components/pixels/SnippetCopy";
 import { WebhookUrlCopy } from "@/components/pixels/WebhookUrlCopy";
@@ -94,7 +95,10 @@ export default async function PixelDetailPage({ params }: PageProps) {
             {pixel.pixel_id}
           </Badge>
         </div>
-        <QualificationDrawer pixelId={pixel.id} pixelName={pixel.name} />
+        <div className="flex flex-wrap items-center gap-2">
+          <ExportLeadsButton pixelId={pixel.id} />
+          <QualificationDrawer pixelId={pixel.id} pixelName={pixel.name} />
+        </div>
       </header>
 
       <Card>

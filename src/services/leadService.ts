@@ -147,6 +147,20 @@ export const leadService = {
     return (data ?? []) as LeadSubmission[];
   },
 
+  async listAllLeads(
+    supabase: SupabaseClient,
+    pixelId: string
+  ): Promise<LeadSubmission[]> {
+    const { data, error } = await supabase
+      .from("lead_submissions")
+      .select("*")
+      .eq("pixel_id", pixelId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new LeadServiceError(error.message);
+    return (data ?? []) as LeadSubmission[];
+  },
+
   async listLeads(
     supabase: SupabaseClient,
     params: ListLeadsParams
