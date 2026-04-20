@@ -96,7 +96,8 @@ export default async function PixelDetailPage({ params }: PageProps) {
           </Badge>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <ExportLeadsButton pixelId={pixel.id} />
+          <ExportLeadsButton pixelId={pixel.id} format="csv" />
+          <ExportLeadsButton pixelId={pixel.id} format="xlsx" />
           <QualificationDrawer pixelId={pixel.id} pixelName={pixel.name} />
         </div>
       </header>
