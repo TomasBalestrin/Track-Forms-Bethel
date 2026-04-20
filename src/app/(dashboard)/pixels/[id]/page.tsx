@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { ExportLeadsButton } from "@/components/leads/ExportLeadsButton";
 import { LeadsTable } from "@/components/leads/LeadsTable";
+import { QualifiedWebhookForm } from "@/components/pixels/QualifiedWebhookForm";
 import { SnippetCopy } from "@/components/pixels/SnippetCopy";
 import { WebhookUrlCopy } from "@/components/pixels/WebhookUrlCopy";
 import { QualificationDrawer } from "@/components/qualification/QualificationDrawer";
@@ -111,6 +112,10 @@ export default async function PixelDetailPage({ params }: PageProps) {
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <WebhookUrlCopy url={webhookUrl} />
+          <QualifiedWebhookForm
+            pixelId={pixel.id}
+            initialUrl={pixel.qualified_webhook_url}
+          />
           <Separator />
           <SnippetCopy snippet={snippet} />
         </CardContent>

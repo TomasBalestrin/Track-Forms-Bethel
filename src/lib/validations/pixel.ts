@@ -33,9 +33,19 @@ export const UpdatePixelSchema = z
       .min(1, "CAPI Access Token é obrigatório.")
       .max(500, "CAPI Access Token deve ter no máximo 500 caracteres.")
       .optional(),
+    qualified_webhook_url: z
+      .string()
+      .trim()
+      .max(1000, "URL deve ter no máximo 1000 caracteres.")
+      .url("URL inválida.")
+      .or(z.literal(""))
+      .optional(),
   })
   .refine(
-    (data) => data.name !== undefined || data.capi_token !== undefined,
+    (data) =>
+      data.name !== undefined ||
+      data.capi_token !== undefined ||
+      data.qualified_webhook_url !== undefined,
     { message: "Informe ao menos um campo para atualizar." }
   );
 

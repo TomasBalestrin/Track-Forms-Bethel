@@ -113,6 +113,10 @@ export const pixelService = {
     const payload: UpdatePixelInput = {};
     if (input.name !== undefined) payload.name = input.name;
     if (input.capi_token !== undefined) payload.capi_token = input.capi_token;
+    if (input.qualified_webhook_url !== undefined) {
+      payload.qualified_webhook_url =
+        input.qualified_webhook_url === "" ? null : input.qualified_webhook_url;
+    }
 
     const { data, error } = await supabase
       .from("pixels")
