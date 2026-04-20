@@ -38,7 +38,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       const blob = await response.blob();
       const filename = filenameFromContentDisposition(
         response.headers.get("Content-Disposition"),
-        "leads.csv"
+        "leads.xlsx"
       );
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -64,7 +64,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       variant="outline"
       onClick={handleExport}
       disabled={loading}
-      aria-label="Exportar leads em CSV"
+      aria-label="Exportar leads em XLSX"
     >
       {loading ? (
         <>
@@ -74,7 +74,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       ) : (
         <>
           <Download className="h-4 w-4" aria-hidden="true" />
-          Exportar CSV
+          Exportar XLSX
         </>
       )}
     </Button>
