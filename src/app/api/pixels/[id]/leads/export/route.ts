@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { buildLeadsCsv, buildLeadsCsvFilename } from "@/lib/leads/csv";
+import { buildLeadsXlsx, buildLeadsXlsxFilename } from "@/lib/leads/xlsx";
 import { createClient } from "@/lib/supabase/server";
 import { leadService, LeadServiceError } from "@/services/leadService";
 import { pixelService, PixelServiceError } from "@/services/pixelService";
@@ -22,14 +22,18 @@ export async function GET(_request: Request, { params }: RouteContext) {
     const pixel = await pixelService.getById(supabase, user.id, params.id);
     const leads = await leadService.listAllLeads(supabase, pixel.id);
 
-    const csv = buildLeadsCsv(leads);
-    const filename = buildLeadsCsvFilename(pixel.name);
+    const raw = buildLeadsXlsx(leads);
+    const filename = buildLeadsXlsxFilename(pixel.name);
+    const body = new Uint8Array(new ArrayBuffer(raw.byteLength));
+    body.set(raw);
 
-    return new NextResponse(csv, {
+    return new NextResponse(body, {
       status: 200,
       headers: {
-        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Length": String(body.byteLength),
         "Cache-Control": "no-store",
       },
     });
