@@ -6,9 +6,17 @@ import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
+type ExportFormat = "csv" | "xlsx";
+
 interface ExportLeadsButtonProps {
   pixelId: string;
+  format: ExportFormat;
 }
+
+const FORMAT_LABELS: Record<ExportFormat, string> = {
+  csv: "CSV",
+  xlsx: "XLSX",
+};
 
 function filenameFromContentDisposition(
   header: string | null,
@@ -19,16 +27,21 @@ function filenameFromContentDisposition(
   return match ? decodeURIComponent(match[1]) : fallback;
 }
 
-export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
+export function ExportLeadsButton({
+  pixelId,
+  format,
+}: ExportLeadsButtonProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const label = FORMAT_LABELS[format];
 
   async function handleExport() {
     setLoading(true);
     try {
-      const response = await fetch(`/api/pixels/${pixelId}/leads/export`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `/api/pixels/${pixelId}/leads/export?format=${format}`,
+        { method: "GET" }
+      );
       if (!response.ok) {
         const body = (await response.json().catch(() => null)) as {
           error?: string;
@@ -38,7 +51,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       const blob = await response.blob();
       const filename = filenameFromContentDisposition(
         response.headers.get("Content-Disposition"),
-        "leads.xlsx"
+        `leads.${format}`
       );
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -64,7 +77,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       variant="outline"
       onClick={handleExport}
       disabled={loading}
-      aria-label="Exportar leads em XLSX"
+      aria-label={`Exportar leads em ${label}`}
     >
       {loading ? (
         <>
@@ -74,7 +87,7 @@ export function ExportLeadsButton({ pixelId }: ExportLeadsButtonProps) {
       ) : (
         <>
           <Download className="h-4 w-4" aria-hidden="true" />
-          Exportar XLSX
+          Exportar {label}
         </>
       )}
     </Button>

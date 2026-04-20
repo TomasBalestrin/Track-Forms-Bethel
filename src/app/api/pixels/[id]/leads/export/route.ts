@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { buildLeadsCsv, buildLeadsCsvFilename } from "@/lib/leads/csv";
 import { buildLeadsXlsx, buildLeadsXlsxFilename } from "@/lib/leads/xlsx";
 import { createClient } from "@/lib/supabase/server";
 import { leadService, LeadServiceError } from "@/services/leadService";
@@ -9,7 +10,13 @@ interface RouteContext {
   params: { id: string };
 }
 
-export async function GET(_request: Request, { params }: RouteContext) {
+type ExportFormat = "csv" | "xlsx";
+
+function parseFormat(raw: string | null): ExportFormat {
+  return raw === "csv" ? "csv" : "xlsx";
+}
+
+export async function GET(request: Request, { params }: RouteContext) {
   try {
     const supabase = createClient();
     const {
@@ -21,6 +28,21 @@ export async function GET(_request: Request, { params }: RouteContext) {
 
     const pixel = await pixelService.getById(supabase, user.id, params.id);
     const leads = await leadService.listAllLeads(supabase, pixel.id);
+
+    const format = parseFormat(new URL(request.url).searchParams.get("format"));
+
+    if (format === "csv") {
+      const csv = buildLeadsCsv(leads);
+      const filename = buildLeadsCsvFilename(pixel.name);
+      return new NextResponse(csv, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="${filename}"`,
+          "Cache-Control": "no-store",
+        },
+      });
+    }
 
     const raw = buildLeadsXlsx(leads);
     const filename = buildLeadsXlsxFilename(pixel.name);
